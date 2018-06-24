@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 /**
  * @Auther: caoqsq
  * @Date: 2018/6/21 13:23
- * @Description:
+ * @Description: 用来测试ribbon+restTemplate
  */
 @RestController
 @Slf4j
