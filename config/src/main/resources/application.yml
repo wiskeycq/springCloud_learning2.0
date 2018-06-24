@@ -13,3 +13,8 @@ spring:
           username: wiskeycq
           password: cq921208
           basedir: D:\学习视频\basedir
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
