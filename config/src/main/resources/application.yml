@@ -1,0 +1,15 @@
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+spring:
+  application:
+    name: config
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/wiskeycq/config-repo
+          username: wiskeycq
+          password: cq921208
+          basedir: D:\学习视频\basedir
