@@ -31,6 +31,7 @@
         <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
         <order-common.version>0.0.1-SNAPSHOT</order-common.version>
         <product-client.version>0.0.1-SNAPSHOT</product-client.version>
+        <product-common.version>0.0.1-SNAPSHOT</product-common.version>
     </properties>
 
     <dependencyManagement>
@@ -51,6 +52,11 @@
                 <groupId>com.cq</groupId>
                 <artifactId>product-client</artifactId>
                 <version>${product-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.cq</groupId>
+                <artifactId>product-common</artifactId>
+                <version>${product-common.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

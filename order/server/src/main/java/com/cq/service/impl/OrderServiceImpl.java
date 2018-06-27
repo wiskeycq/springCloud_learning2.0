@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
@@ -40,6 +41,7 @@ public class OrderServiceImpl implements OrderService {
      * 4. 订单入库
      */
     @Override
+    @Transactional
     public OrderDTO create(OrderDTO orderDTO) {
 
         String orderId = KeyUtil.genUniqueKey();
@@ -83,4 +85,20 @@ public class OrderServiceImpl implements OrderService {
         orderMasterRepository.save(orderMaster);
         return orderDTO;
     }
+
+    //如果是秒杀类项目，为了让系统抗住很大的并发压力，可以把3，4两步改为异步处理。
+    //123成功之后就告诉用户下单成功，4异步处理{下单}（消息队列），如果第四步失败了，则进行重试，不处理成功，mq的消息一直在
+    //若34都异步处理呢，如果订单服务创建订单成功，商品服务扣减库存失败，该如何回滚这笔一单子呢？
+    //思路：订单服务创建成功后，订单状态变为下单中，发送一个消息给队列，产品服务收到队列里面的消息，进行减库存，如果成功，
+    //则给队列发送成功的消息，订单服务监听扣库存的结果，此时订单服务把订单状态改为下单成功；若给队列发送失败的消息，则把订单状态改为下单失败。给用户
+    //刚开始返回的是下单中，等成功或者失败了就返回用户成功或者失败。类似于12306抢票
+    //但是这个的前提是投递消息是可靠的。
+
+    /*如果秒杀类项目，查询商品信息也应该做相应处理
+    *  1.将商品的信息，比如商品价格，商品id，商品库存等存储在redis中
+    *  2.判断库存是不是足够，如果够，则减库存并将新值设置进redis中。
+    *  3.后续进行订单服务订单入库，如果订单详细入库成功，订单主表入库失败，则进行事物回滚，都不进行入库，那redis库存已经
+    *  变化了，该如何处理呢？
+    *  4.订单入库异常的情况下，手动回滚redis，订单入库的地方，如果入库失败，则把库存又加回redis。
+    * */
 }

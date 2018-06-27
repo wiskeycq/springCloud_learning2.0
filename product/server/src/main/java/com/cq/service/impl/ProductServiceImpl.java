@@ -9,11 +9,16 @@ import com.cq.model.ProductInfo;
 import com.cq.model.ProductInfoOutput;
 import com.cq.repository.ProductInfoRepository;
 import com.cq.service.ProductService;
+import com.cq.utils.JsonUtil;
+import com.google.common.collect.Lists;
+import com.rabbitmq.tools.json.JSONUtil;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +34,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductInfoRepository productInfoRepository;
+    @Autowired
+    private AmqpTemplate amqpTemplate;
 
     @Override
     public List<ProductInfo> findUpAll() {
@@ -48,8 +55,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional
     public void decreaseStock(List<DecreaseStockInput> decreaseStockInputList) {
+        List<ProductInfo> productInfoList = decreaseStockProcess(decreaseStockInputList);
+
+        List<ProductInfoOutput> productInfoOutputList=productInfoList.stream().map(e-> {
+            ProductInfoOutput output = new ProductInfoOutput();
+            BeanUtils.copyProperties(e,output);
+            return output;
+        }).collect(Collectors.toList());
+        //发送消息
+        amqpTemplate.convertAndSend("productInfo", JsonUtil.toJson(productInfoOutputList));
+    }
+
+    @Transactional
+    public List<ProductInfo> decreaseStockProcess(List<DecreaseStockInput> decreaseStockInputList) {
+        List<ProductInfo> productInfoList = Lists.newArrayList();
         for (DecreaseStockInput decreaseStockInput : decreaseStockInputList) {
             Optional<ProductInfo> productInfoOptional = productInfoRepository.findById(decreaseStockInput.getProductId());
             //判断商品是否存在
@@ -68,6 +88,8 @@ public class ProductServiceImpl implements ProductService {
             productInfo.setUpdateTime(new Date());
             //更新数据库
             productInfoRepository.save(productInfo);
+            productInfoList.add(productInfo);
         }
+        return productInfoList;
     }
 }
