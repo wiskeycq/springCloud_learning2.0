@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @Auther: caoqsq
  * @Date: 2018/6/27 11:15
- * @Description:
+ * @Description: 监控产品服务，当执行完全部减库存后，把消息发到队列，再把库存信息存进redis
  */
 @Component
 @Slf4j
