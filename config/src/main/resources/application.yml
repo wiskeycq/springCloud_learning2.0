@@ -13,6 +13,11 @@ spring:
           username: wiskeycq
           password: cq921208
           basedir: D:\学习视频\basedir
+  rabbitmq:
+      host: localhost
+      port: 5673
+      username: guest
+      password: guest
 management:
   endpoints:
     web:

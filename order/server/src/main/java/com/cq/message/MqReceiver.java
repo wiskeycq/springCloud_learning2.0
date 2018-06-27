@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 /**
  * @Auther: caoqsq
  * @Date: 2018/6/25 15:13
- * @Description: 接受mq消息（消费者）
+ * @Description: 接受mq消息（消费者），使用消息交换机的目的是起到路由的作用(消息分组)：比如订单服务既可以调用数码供应商，还可以调用水果供应商，通过路由标识key来区分
  */
 @Component
 @Slf4j
