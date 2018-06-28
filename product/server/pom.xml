@@ -66,6 +66,12 @@
             <artifactId>guava</artifactId>
             <version>23.0</version>
         </dependency>
+
+        <!--引入bus自动刷新-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bus-amqp</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
