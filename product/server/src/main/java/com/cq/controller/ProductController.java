@@ -39,6 +39,7 @@ public class ProductController {
      * 3. 查询类目
      * 4. 构造数据
      */
+    //@CrossOrigin() //用这个注解可以对这个接口实现跨域访问 //CrossOrigin(allowCredentials = "true")allowCredentials置为true，表示允许cookie跨域
     @GetMapping("/list")
     public ResultVO<ProductInfo> List() {
         //1. 查询所有在架的商品
