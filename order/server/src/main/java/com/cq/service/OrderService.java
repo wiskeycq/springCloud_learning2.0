@@ -10,9 +10,14 @@ import com.cq.DTO.OrderDTO;
 public interface OrderService {
 
     /**
-     * 创建订单
+     * 创建订单（只能买家才能操作）
      * @param orderDTO
      * @return
      */
     OrderDTO create(OrderDTO orderDTO);
+
+    /**
+     * 完结订单(只能卖家才能操作）
+     */
+    OrderDTO finish(String orderId);
 }
