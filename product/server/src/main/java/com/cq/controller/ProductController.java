@@ -78,6 +78,12 @@ public class ProductController {
      */
     @PostMapping("/listForOrder")
     public List<ProductInfoOutput> listForOrder(@RequestBody List<String> productIdList) {
+        //为了测试服务降级与熔断，让过来得请求先睡两秒
+ /*       try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
         return productService.findList(productIdList);
     }
 
