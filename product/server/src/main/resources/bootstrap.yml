@@ -11,3 +11,12 @@ spring:
         enabled: true
         service-id: CONFIG
       profile: dev
+  zipkin:
+    base-url: http://localhost:9411/
+  sleuth:
+    sampler:
+      probability: 1.0
+#将feign这个组件下面的日志级别调到debug
+logging:
+  level:
+    org.springframework.cloud.openfeign: debug

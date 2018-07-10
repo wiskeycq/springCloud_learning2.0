@@ -16,6 +16,11 @@ spring:
         myMessage:
           group: order
           content-type: application/json
+  zipkin:
+    base-url: http://localhost:9411/
+  sleuth:
+    sampler:
+      probability: 1.0
 hystrix:
   command:
     #设置全局的超时时间
@@ -23,17 +28,21 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 1000
+            timeoutInMilliseconds: 5000
     #为某个方法设置单独的超时时间
     getProductInfoList:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 1000
+            timeoutInMilliseconds: 5000
+#将feign这个组件下面的日志级别调到debug
+logging:
+  level:
+    org.springframework.cloud.openfeign: debug
 #fegin中hystrix服务降级
-#feign:
-#  hystrix:
-#    enabled: true
+feign:
+  hystrix:
+    enabled: true
 #management:
 #  endpoints:
 #    web:
